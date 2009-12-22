@@ -51,10 +51,8 @@ module REST
         self.request = Net::HTTP::Delete.new(url.path, headers)
       when :put
         self.request = Net::HTTP::Put.new(url.path, headers)
-        self.request.body = body
       when :post
         self.request = Net::HTTP::Post.new(url.path, headers)
-        self.request.body = body
       else
         raise ArgumentError, "Unknown HTTP verb `#{verb}'"
       end
@@ -84,7 +82,9 @@ module REST
         http_request.verify_mode = verify_mode
       end
       
-      response = http_request.start {|http| http.request(request, request.body) }
+      response = http_request.start do |http|
+        http.request(request, body)
+      end
       REST::Response.new(response.code, response.instance_variable_get('@header'), response.body)
     end
     
