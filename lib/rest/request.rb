@@ -84,7 +84,7 @@ module REST
         http_request.verify_mode = verify_mode
       end
       
-      response = http_request.start {|http| http.request(request) }
+      response = http_request.start {|http| http.request(request, request.body) }
       REST::Response.new(response.code, response.instance_variable_get('@header'), response.body)
     end
     
